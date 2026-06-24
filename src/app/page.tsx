@@ -1,23 +1,31 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import React from 'react'
+import { Input } from '@/components/ui/input'
+import React, { useState } from 'react'
 import { useTRPC } from '@/trpc/client'
-// import { useQuery } from '@tanstack/react-query'
 import { useMutation } from '@tanstack/react-query'
+
 const Home = () => {
+  const [value, setValue] = useState('')
   const trpc = useTRPC();
-  // trpc.hello.queryOptions({text:"Hello world"});
   const invoke = useMutation(trpc.invoke.mutationOptions({}))
+
   function clickMe() {
-    invoke.mutate({ text: "sakshampardesi5831@gmail.com" })
+    if (!value.trim()) return;
+    invoke.mutate({ text: value })
   }
+
   return (
-    <div
-      className='p-4 max-w-7xl mx-auto'
-    >
-      <Button
-        onClick={() => clickMe()}
-      >Click me</Button>
+    <div className='p-4 max-w-7xl mx-auto flex gap-2'>
+      <Input
+        placeholder='Enter a prompt...'
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && clickMe()}
+      />
+      <Button onClick={clickMe} disabled={invoke.isPending}>
+        {invoke.isPending ? 'Running...' : 'Run'}
+      </Button>
     </div>
   )
 }

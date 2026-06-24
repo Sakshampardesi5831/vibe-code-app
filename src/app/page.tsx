@@ -3,16 +3,22 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import React, { useState } from 'react'
 import { useTRPC } from '@/trpc/client'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const Home = () => {
   const [value, setValue] = useState('')
   const trpc = useTRPC();
-  const invoke = useMutation(trpc.invoke.mutationOptions({}))
+  const { data: messages } = useQuery(trpc.messages.getMany.queryOptions());
+  const createMessage = useMutation(trpc.messages.create.mutationOptions({
+    onSuccess: (data) => {
+      toast.success('Message created successfully!');
+    }
+  }));
 
   function clickMe() {
     if (!value.trim()) return;
-    invoke.mutate({ text: value })
+    createMessage.mutate({ value });
   }
 
   return (
@@ -23,9 +29,10 @@ const Home = () => {
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && clickMe()}
       />
-      <Button onClick={clickMe} disabled={invoke.isPending}>
-        {invoke.isPending ? 'Running...' : 'Run'}
+      <Button onClick={clickMe} disabled={createMessage.isPending}>
+        {createMessage.isPending ? 'Creating...' : 'Create'}
       </Button>
+      {JSON.stringify(messages, null, 2)}
     </div>
   )
 }

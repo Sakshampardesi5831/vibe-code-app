@@ -12,18 +12,18 @@ const MessagesContainer = ({ projectId }: Props) => {
     const trpc = useTRPC();
     const bottomRef = useRef<HTMLDivElement>(null);
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({ projectId: projectId }));
-    
-    
-    useEffect(()=>{
-        const lastAssistantMessage = messages.findLast((message)=>message.role === "ASSISTANT");
-        if(lastAssistantMessage){
+
+
+    useEffect(() => {
+        const lastAssistantMessage = messages.findLast((message) => message.role === "ASSISTANT");
+        if (lastAssistantMessage) {
             // TODO SET ACTIVE FRAGMENT
         }
-    },[messages])
-    useEffect(()=>{
+    }, [messages])
+    useEffect(() => {
         bottomRef.current?.scrollIntoView()
-    },[messages.length])
-    
+    }, [messages.length])
+
     return (
 
         <div
@@ -46,7 +46,9 @@ const MessagesContainer = ({ projectId }: Props) => {
                             type={message.type}
                         />
                     ))}
-
+                    <div
+                      ref={bottomRef}
+                    />
                 </div>
 
             </div>

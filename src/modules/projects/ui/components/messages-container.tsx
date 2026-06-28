@@ -16,12 +16,13 @@ const MessagesContainer = ({ projectId, activeFragment, setActiveFragment }: Pro
     const trpc = useTRPC();
     const bottomRef = useRef<HTMLDivElement>(null);
     const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({ projectId: projectId }, { refetchInterval: 5000 }));
-    useEffect(() => {
-        const lastAssistantMessageWithFragment = messages.findLast((message) => message.role === "ASSISTANT" && !!message.fragment);
-        if (lastAssistantMessageWithFragment) {
-            setActiveFragment(lastAssistantMessageWithFragment.fragment)
-        }
-    }, [messages, setActiveFragment])
+     // TODO:for now no fragment is active 
+    // useEffect(() => {
+    //     const lastAssistantMessageWithFragment = messages.findLast((message) => message.role === "ASSISTANT" && !!message.fragment);
+    //     if (lastAssistantMessageWithFragment) {
+    //         setActiveFragment(lastAssistantMessageWithFragment.fragment)
+    //     }
+    // }, [messages, setActiveFragment])
     useEffect(() => {
         bottomRef.current?.scrollIntoView()
     }, [messages.length])

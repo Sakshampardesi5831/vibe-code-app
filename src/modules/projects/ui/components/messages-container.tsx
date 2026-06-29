@@ -15,7 +15,7 @@ interface Props {
 const MessagesContainer = ({ projectId, activeFragment, setActiveFragment }: Props) => {
     const trpc = useTRPC();
     const bottomRef = useRef<HTMLDivElement>(null);
-    const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({ projectId: projectId }, { refetchInterval: 5000 }));
+    const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({ projectId: projectId },{refetchInterval:10000}));
      // TODO:for now no fragment is active 
     // useEffect(() => {
     //     const lastAssistantMessageWithFragment = messages.findLast((message) => message.role === "ASSISTANT" && !!message.fragment);
